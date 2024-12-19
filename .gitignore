@@ -1,0 +1,5 @@
+# Ignore .env
+.env
+
+# Ignore the temp folder for API logs
+temp/
