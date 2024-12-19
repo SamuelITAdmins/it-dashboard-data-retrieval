@@ -16,6 +16,7 @@ if response.status_code == 200:
     # Extracting an example element (e.g., the Google homepage title and a few links)
     page_title = soup.title.string
     links = [a.get('href') for a in soup.find_all('a', href=True)][:5]  # First 5 links
+    # print(soup.prettify())
 
     # Create an Excel workbook
     wb = Workbook()
