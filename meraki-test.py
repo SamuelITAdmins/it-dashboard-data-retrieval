@@ -79,17 +79,20 @@ if __name__ == "__main__":
         networks = dashboard.organizations.getOrganizationNetworks(se_organization['id'])
 
         # Calculate the start time for the past week
-        start_time = datetime.now() - timedelta(days=7)
+        start_time = datetime.now() - timedelta(days=16)
 
         # Format the timestamps
-        start_time_str = start_time.isoformat() + "Z"
+        #start_time_str = start_time.isoformat() + "Z"
+        start_time_str = '2024-11-26T06:30:00.00Z'
 
         events = dashboard.networks.getNetworkEvents(
             networks[0]['id'], 
             productType='switch',
-            includedEventTypes=['uplink_connectivity'],
+            #includedEventTypes=['boot'],
+            excludedEventTypes=['stp_port_role_change', 'port_status'],
+            deviceName='DEN-LISTENING',
             startingAfter=start_time_str,
-            perPage=1000
+            perPage=10
         )
         print(events)
 
