@@ -72,29 +72,40 @@ if __name__ == "__main__":
         if se_organization['name'] != 'Samuel Engineering': raise Exception('Did not get SE as the organizaiton')
 
         # get the switches
-        # switches = dashboard.organizations.getOrganizationDevices(se_organization['id'])
-        # if not switches: raise Exception('No switches found')
+        switches = dashboard.organizations.getOrganizationDevices(se_organization['id'])
+        if not switches: raise Exception('No switches found')
 
         # get the networks
         networks = dashboard.organizations.getOrganizationNetworks(se_organization['id'])
 
         # Calculate the start time for the past week
-        start_time = datetime.now() - timedelta(days=16)
+        end_time = datetime.now()
+        start_time = end_time - timedelta(days=7)
 
         # Format the timestamps
-        #start_time_str = start_time.isoformat() + "Z"
-        start_time_str = '2024-11-26T06:30:00.00Z'
+        start_time_str = start_time.isoformat() + "Z"
+        #start_time_str = '2024-11-26T06:30:00.00Z'
+        end_time_str = end_time.isoformat() + "Z"
 
-        events = dashboard.networks.getNetworkEvents(
-            networks[0]['id'], 
-            productType='switch',
-            #includedEventTypes=['boot'],
-            excludedEventTypes=['stp_port_role_change', 'port_status'],
-            deviceName='DEN-LISTENING',
-            startingAfter=start_time_str,
-            perPage=10
+        # get network events
+        # events = dashboard.networks.getNetworkEvents(
+        #     networks[0]['id'], 
+        #     productType='switch',
+        #     #includedEventTypes=['boot'],
+        #     excludedEventTypes=['stp_port_role_change', 'port_status'],
+        #     deviceName='DEN-LISTENING',
+        #     startingAfter=start_time_str,
+        #     perPage=10
+        # )
+        # print(events)
+
+        # get device loss and latency history
+        # THIS DOES NOT WORK FOR MS DEVICES (Switches)
+        print(switches[0])
+        loss_and_latency = dashboard.devices.getDeviceLossAndLatencyHistory(
+            serial=switches[0]['serial'],
+            ip=switches[0]['lanIp']
         )
-        print(events)
 
         # calculate uptime of each switch
         #uptimes = []
