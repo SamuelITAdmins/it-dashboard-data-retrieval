@@ -73,7 +73,7 @@ def getSwitchDowntime(dashboard, organization, switch, report_length=7):
         'uptime_percentage': uptime_percentage
     }
 
-if __name__ == "__main__":
+def getMerakiSwitchData():
     # get the meraki API key from .env
     load_dotenv()
     meraki_api_key = os.getenv('MERAKI_API_KEY')
@@ -113,8 +113,9 @@ if __name__ == "__main__":
         for switch in switches:
             switch_downtime = getSwitchDowntime(dashboard, se_organization, switch)
             switch_downtimes.append(switch_downtime)
-        for switch_downtime in switch_downtimes:
-            print(switch_downtime)
+        #for switch_downtime in switch_downtimes:
+        #    print(switch_downtime)
+        return switch_downtimes
 
 
         '''
@@ -142,3 +143,8 @@ if __name__ == "__main__":
         '''
     except Exception as e:
         print(f"An error occurred: {e}")
+
+if __name__ == "__main__":
+    switch_data = getMerakiSwitchData()
+    print(len(switch_data))
+    # access_point_data = getMerakiAPData()
