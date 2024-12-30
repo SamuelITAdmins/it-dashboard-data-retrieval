@@ -121,15 +121,7 @@ if __name__ == "__main__":
         # get the networks
         networks = dashboard.organizations.getOrganizationNetworks(se_organization['id'])
 
-        # Calculate the start time for the past week
-        end_time = datetime.now()
-        start_time = end_time - timedelta(days=30)
-
-        # Format the timestamps
-        start_time_str = start_time.isoformat() + "Z"
-        #start_time_str = '2024-11-26T06:30:00.00Z'
-        end_time_str = end_time.isoformat() + "Z"
-
+        # get events of a network
         #events = dashboard.networks.getNetworkEvents(
         #    networks[0]['id'], 
         #    #includedEventTypes=['boot'],
@@ -147,29 +139,6 @@ if __name__ == "__main__":
             #startingAfter=start_time_str
         #)
         #print(availability)
-
-        history = dashboard.organizations.getOrganizationDevicesAvailabilitiesChangeHistory(
-            se_organization['id'],
-            t0=start_time_str,
-            t1=end_time_str,
-        )
-        print(switches[16]['name'])
-        # print(history[0]['device']['serial'])
-
-        device_history = [
-            record for record in history if record['device']['serial'] == switches[16]['serial']
-        ]
-        switch_history = [
-            record for record in history if record['device']["productType"] == "switch" and record['device']['name'] == 'DEN-EPSILON'
-        ]
-        for history in switch_history:
-            print(history)
-
-
-        # calculate uptime of each switch
-        #uptimes = []
-        #for switch in switches:
-        #    uptimes.append(100 - getSwitchDowntime(dashboard, switch))
         '''
     except Exception as e:
         print(f"An error occurred: {e}")
