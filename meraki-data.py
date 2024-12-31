@@ -3,19 +3,19 @@ from dotenv import load_dotenv
 import os
 from datetime import datetime, timedelta, timezone
 
-def getSwitchDowntime(dashboard, organization, switch, report_length=7):
-    '''Get the downtime and uptime percentage of the given switch.
+def getDeviceDowntime(dashboard, organization, device, report_length=7):
+    '''Get the downtime and uptime percentage of the given device (switch or access point).
 
     Input:
     - dashboard: the meraki DashboardAPI
     - organization: the SE organization
-    - switch: a switch device within the organization
+    - device: a device within the organization
     - report_length: the report duration in days (default = 7)
     
     Returns: A dictionary with the following entries:
-    - switch_name: the name of the switch reported on
-    - downtime: the duration, in seconds, that the switch was down for
-    - uptime_percentage: the amount of time the switch was connected for as a percentage
+    - device_name: the name of the device reported on
+    - downtime: the duration, in seconds, that the device was down for
+    - uptime_percentage: the amount of time the device was connected for as a percentage
     '''
     # calculate the start time for the past week
     end_time = datetime.now(timezone.utc)
@@ -32,22 +32,21 @@ def getSwitchDowntime(dashboard, organization, switch, report_length=7):
             t1=end_time_str
     )
 
-    # get the history for the switch
-    switch_history = [
-        record for record in org_history
-        if record['device']['productType'] == 'switch' and record['device']['name'] == switch['name']
+    # get the history for the device
+    device_history = [
+        record for record in org_history if record['device']['name'] == device['name']
     ]
 
     # sort events by timestamp
-    switch_history.sort(key=lambda x: x['ts'])
-    # print(switch_history)
+    device_history.sort(key=lambda x: x['ts'])
+    # print(device_history)
 
     # calculate the downtime
     downtime = 0
     last_status = None
     last_time = start_time
 
-    for event in switch_history:
+    for event in device_history:
         timestamp = datetime.fromisoformat(event['ts'].replace('Z', ''))
         status = event['details']['new'][0]['value']
 
@@ -68,12 +67,12 @@ def getSwitchDowntime(dashboard, organization, switch, report_length=7):
     uptime_percentage = round((1 - (downtime / total_time)) * 100, 2) if total_time > 0 else 0
 
     return {
-        'switch_name': switch['name'],
+        'device_name': device['name'],
         'downtime': downtime,
         'uptime_percentage': uptime_percentage
     }
 
-def getMerakiSwitchData():
+def getMerakiData():
     # get the meraki API key from .env
     load_dotenv()
     meraki_api_key = os.getenv('MERAKI_API_KEY')
@@ -108,14 +107,30 @@ def getMerakiSwitchData():
         )
         if not switches: raise Exception('No switches found')
 
+        access_points = dashboard.organizations.getOrganizationDevices(
+            se_organization['id'],
+            productTypes=['wireless'],
+            # name='DEN-4TH-AP-04'
+        )
+        if not access_points: raise Exception('No access points found')
+
         # pair switches with switch downtimes
         switch_downtimes = []
         for switch in switches:
-            switch_downtime = getSwitchDowntime(dashboard, se_organization, switch)
+            switch_downtime = getDeviceDowntime(dashboard, se_organization, switch)
             switch_downtimes.append(switch_downtime)
         #for switch_downtime in switch_downtimes:
         #    print(switch_downtime)
-        return switch_downtimes
+
+        # pair access points with AP downtimes
+        ap_downtimes = []
+        for access_point in access_points:
+            ap_downtime = getDeviceDowntime(dashboard, se_organization, access_point)
+            ap_downtimes.append(ap_downtime)
+        #for ap_downtime in ap_downtimes:
+        #    print(ap_downtime)
+
+        return switch_downtimes, ap_downtimes
 
 
         '''
@@ -145,6 +160,10 @@ def getMerakiSwitchData():
         print(f"An error occurred: {e}")
 
 if __name__ == "__main__":
-    switch_data = getMerakiSwitchData()
-    print(len(switch_data))
-    # access_point_data = getMerakiAPData()
+    switch_data, ap_data = getMerakiData()
+    print('Switch data:')
+    for switch in switch_data:
+        print(switch)
+    print('Access Point data:')
+    for ap in ap_data:
+        print(ap)
