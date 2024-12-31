@@ -3,3 +3,5 @@
 
 # Ignore the temp folder for API logs
 temp/
+
+__pycache__/

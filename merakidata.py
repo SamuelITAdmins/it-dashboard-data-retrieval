@@ -1,6 +1,7 @@
 import meraki
 from dotenv import load_dotenv
 import os
+import sys
 from datetime import datetime, timedelta, timezone
 
 def getDeviceDowntime(dashboard, organization, device, report_length=7):
@@ -158,6 +159,9 @@ def getMerakiData():
         '''
     except Exception as e:
         print(f"An error occurred: {e}")
+
+
+__all__ = ['getMerakiData']
 
 if __name__ == "__main__":
     switch_data, ap_data = getMerakiData()
