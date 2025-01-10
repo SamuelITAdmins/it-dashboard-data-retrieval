@@ -33,6 +33,10 @@ def getDeviceDowntime(dashboard, organization, device, report_length=7):
             t1=end_time_str
     )
 
+    # get the device network to access the location of the device
+    device_network = dashboard.networks.getNetwork(device['networkId'])
+    device_location = device_network['name']
+
     # get the history for the device
     device_history = [
         record for record in org_history if record['device']['name'] == device['name']
@@ -44,11 +48,11 @@ def getDeviceDowntime(dashboard, organization, device, report_length=7):
 
     # calculate the downtime
     downtime = 0
-    last_status = None
+    last_status = 'online'
     last_time = start_time
 
     for event in device_history:
-        timestamp = datetime.fromisoformat(event['ts'].replace('Z', ''))
+        timestamp = datetime.fromisoformat(event['ts'].replace('Z', '+00:00'))
         status = event['details']['new'][0]['value']
 
         # add the time the device was not connected for
@@ -69,8 +73,10 @@ def getDeviceDowntime(dashboard, organization, device, report_length=7):
 
     return {
         'device_name': device['name'],
+        'location': device_location,
         'downtime': downtime,
-        'uptime_percentage': uptime_percentage
+        'uptime_percentage': uptime_percentage,
+        'status': last_status if last_status else status
     }
 
 def getMerakiData():
@@ -100,11 +106,14 @@ def getMerakiData():
         se_organization = dashboard.organizations.getOrganizations()[0]
         if se_organization['name'] != 'Samuel Engineering': raise Exception('Did not get SE as the organization')
 
+        device_statuses = dashboard.organizations.getOrganizationDevicesStatusesOverview(se_organization['id'])
+        print(device_statuses)
+
         # get the switches
         switches = dashboard.organizations.getOrganizationDevices(
             se_organization['id'], 
             productTypes=['switch'], 
-            # name='DEN-CREATIVE'
+            # name='DEN-1ST-TEMP'
         )
         if not switches: raise Exception('No switches found')
 
@@ -159,6 +168,7 @@ def getMerakiData():
         '''
     except Exception as e:
         print(f"An error occurred: {e}")
+        raise
 
 
 __all__ = ['getMerakiData']
