@@ -76,7 +76,7 @@ def getDeviceDowntime(dashboard, organization, device, report_length=7):
         'location': device_location,
         'downtime': downtime,
         'uptime_percentage': uptime_percentage,
-        'status': last_status if last_status else status
+        'status': last_status
     }
 
 def getMerakiData():
