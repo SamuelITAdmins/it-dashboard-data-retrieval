@@ -2,5 +2,5 @@ requests
 beautifulsoup4
 openpyxl
 selenium
-meraki
 python-dotenv
+meraki
