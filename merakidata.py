@@ -48,7 +48,8 @@ def getDeviceDowntime(dashboard, organization, device, report_length=7):
 
     # calculate the downtime
     downtime = 0
-    last_status = 'online'
+    # assume that the switch is online if no updates have been made in the timeframe
+    last_status = 'online' # TODO: change so that dormant devices are not considered online by default
     last_time = start_time
 
     for event in device_history:
