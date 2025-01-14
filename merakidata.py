@@ -142,35 +142,9 @@ def getMerakiData():
         #    print(ap_downtime)
 
         return switch_downtimes, ap_downtimes
-
-
-        '''
-        # get the networks
-        networks = dashboard.organizations.getOrganizationNetworks(se_organization['id'])
-
-        # get events of a network
-        #events = dashboard.networks.getNetworkEvents(
-        #    networks[0]['id'], 
-        #    #includedEventTypes=['boot'],
-        #    excludedEventTypes=['stp_port_role_change', 'port_status'],
-        #    deviceName='DEN-LISTENING',
-        #    startingAfter=start_time_str,
-        #    perPage=10
-        #)
-        #print(events)
-
-        # get device avaiability history
-        #availability = dashboard.organizations.getOrganizationDevicesPowerModulesStatusesByDevice(
-        #    se_organization['id'],
-            #perPage=100,
-            #startingAfter=start_time_str
-        #)
-        #print(availability)
-        '''
     except Exception as e:
         print(f"An error occurred: {e}")
         raise
-
 
 __all__ = ['getMerakiData']
 
