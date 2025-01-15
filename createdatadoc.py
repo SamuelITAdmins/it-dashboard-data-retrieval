@@ -1,14 +1,16 @@
 from openpyxl import Workbook
 from merakidata import getMerakiData
-
-switch_downtimes, ap_downtimes = getMerakiData()
+from freshservicedata import getFreshServiceData
 
 # Create an Excel workbook
 wb = Workbook()
 switches_ws = wb.active
 switches_ws.title = "Meraki Switches"
 
-# Write data to specific cells
+# Get Meraki Data
+switch_downtimes, ap_downtimes = getMerakiData()
+
+# Write Meraki Data
 switches_ws["A1"] = "Switches"
 switches_ws["B1"] = "Location"
 switches_ws["C1"] = "Uptime"
@@ -30,6 +32,19 @@ for i, ap_downtime in enumerate(ap_downtimes, start=2):
     ap_ws[f"B{i}"] = ap_downtime['location']
     ap_ws[f"C{i}"] = ap_downtime['uptime_percentage']
     ap_ws[f"D{i}"] = ap_downtime['status']
+
+# Get FreshService Data
+fs_data = getFreshServiceData()
+
+# Write FreshService Data
+fs_ws = wb.create_sheet(title="Freshservice")
+
+fs_ws["A1"] = "Total Tickets (Last 7 Days)"
+fs_ws["B1"] = "Unresolved Tickets (Last 7 Days)"
+fs_ws["C1"] = "Resolved Tickets (Last 7 Days)"
+fs_ws["A2"] = fs_data['total_tickets']
+fs_ws["B2"] = fs_data['unresolved_tickets']
+fs_ws["C2"] = fs_data['resolved_tickets']
 
 # Save the Excel file
 file_name = "Meraki_Data.xlsx"

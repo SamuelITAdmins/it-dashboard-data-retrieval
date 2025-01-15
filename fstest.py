@@ -21,7 +21,7 @@ HEADERS = {
 
 # Helper function to get tickets using the filter endpoint
 def get_tickets_with_filter(query):
-    url = f"{BASE_URL}/ticketsaa"
+    url = f"{BASE_URL}/tickets"
     params = {"query": query}
     response = requests.get(url, headers=HEADERS, params=params)
     response.raise_for_status()  # Raise error for bad requests
