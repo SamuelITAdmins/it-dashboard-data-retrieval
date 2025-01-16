@@ -52,11 +52,14 @@ def getFreshServiceData():
     print(f"Unresolved tickets created in the last 7 days: {unresolved_tickets.get("total", [])}")
     resolved_tickets = getTicketsWithFilter(fresh_service_domain, resolved_tickets_params, headers)
     print(f"Resolved tickets created in the last 7 days: {resolved_tickets.get("total", [])}")
+    resolution_percentage = round(resolved_tickets.get("total", []) / total_tickets.get("total", []) * 100, 2)
+    print(f"Resolved tickets percentage in the last 7 days: {resolution_percentage}")
 
     return {
         "total_tickets": total_tickets.get("total", []),
         "unresolved_tickets": unresolved_tickets.get("total", []),
         "resolved_tickets": resolved_tickets.get("total", []),
+        "resolution_percentage": resolution_percentage
     }
 
 __all__ = ['getFreshServiceData']

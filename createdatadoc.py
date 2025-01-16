@@ -42,11 +42,13 @@ fs_ws = wb.create_sheet(title="Freshservice")
 fs_ws["A1"] = "Total Tickets (Last 7 Days)"
 fs_ws["B1"] = "Unresolved Tickets (Last 7 Days)"
 fs_ws["C1"] = "Resolved Tickets (Last 7 Days)"
+fs_ws["D1"] = "SLA Resolution Compliance"
 fs_ws["A2"] = fs_data['total_tickets']
 fs_ws["B2"] = fs_data['unresolved_tickets']
 fs_ws["C2"] = fs_data['resolved_tickets']
+fs_ws["D2"] = fs_data['resolution_percentage']
 
 # Save the Excel file
-file_name = "Meraki_Data.xlsx"
+file_name = "IT Metric Dashboard Spreadsheet.xlsx"
 wb.save(file_name)
 print(f"Data saved to {file_name}")
