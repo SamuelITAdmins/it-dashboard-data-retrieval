@@ -1,6 +1,7 @@
 from openpyxl import Workbook
 from merakidata import getMerakiData
 from freshservicedata import getFreshServiceData
+from Users import get_AAD_Users 
 
 # Create an Excel workbook
 wb = Workbook()
@@ -47,6 +48,29 @@ fs_ws["A2"] = fs_data['total_tickets']
 fs_ws["B2"] = fs_data['unresolved_tickets']
 fs_ws["C2"] = fs_data['resolved_tickets']
 fs_ws["D2"] = fs_data['resolution_percentage']
+
+from Users import get_AAD_Users
+
+# Get users
+company_name = "Samuel Engineering"
+users = get_AAD_Users(company_name)
+
+# Create a new sheet for AAD user data
+aad_ws = wb.create_sheet(title="Users")
+
+# Header row
+aad_ws["A1"] = "User Principal Name"
+aad_ws["B1"] = "Job Title"
+aad_ws["C1"] = "Department"
+aad_ws["D1"] = "City"
+
+# Fill rows with user data
+for idx, user in enumerate(users, start=2):
+    aad_ws[f"A{idx}"] = user.get("userPrincipalName", "")
+    aad_ws[f"B{idx}"] = user.get("jobTitle", "")
+    aad_ws[f"C{idx}"] = user.get("department", "")
+    aad_ws[f"D{idx}"] = user.get("city", "")
+
 
 # Save the Excel file
 file_name = "IT Metric Dashboard Spreadsheet.xlsx"
