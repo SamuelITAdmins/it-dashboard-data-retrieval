@@ -49,7 +49,6 @@ fs_ws["B2"] = fs_data['unresolved_tickets']
 fs_ws["C2"] = fs_data['resolved_tickets']
 fs_ws["D2"] = fs_data['resolution_percentage']
 
-from Users import get_AAD_Users
 
 # Get users
 company_name = "Samuel Engineering"
