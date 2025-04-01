@@ -1,6 +1,7 @@
 import os
 from dotenv import load_dotenv
 import requests
+import uuid
 import datetime
 import hashlib
 import hmac
@@ -12,27 +13,23 @@ load_dotenv()
 mimecast_api_key = os.getenv('MIMECAST_API_KEY')
 mimecast_secret_key = os.getenv('MIMECAST_SECRET_KEY')
 mimecast_domain = os.getenv('MIMECAST_DOMAIN')
-ACCESS_KEY = "your_access_key"
-SECRET_KEY = "your_secret_key"
-APP_ID = "your_app_id"
-APP_KEY = "your_app_key"
 
 # API Endpoint
-BASE_URL = "https://your-mimecast-api-url.com/api"
+BASE_URL = os.getenv('MIMECAST_DOMAIN')
 
 # Generate headers for Mimecast authentication
 def generate_headers():
-    request_id = datetime.datetime.utcnow().strftime("%Y%m%d%H%M%S")
+    request_id = str(uuid.uuid4())
     date_str = datetime.datetime.utcnow().strftime("%a, %d %b %Y %H:%M:%S UTC")
     
-    secret_bytes = base64.b64decode(SECRET_KEY)
+    secret_bytes = base64.b64decode(mimecast_secret_key)
     data_to_sign = f"{date_str}:{request_id}".encode('utf-8')
     signature = hmac.new(secret_bytes, data_to_sign, digestmod=hashlib.sha1).digest()
     signature_b64 = base64.b64encode(signature).decode()
 
     headers = {
-        "Authorization": f"MC {ACCESS_KEY}:{signature_b64}",
-        "x-mc-app-id": APP_ID,
+        "Authorization": f"MC {mimecast_api_key}:{signature_b64}",
+        "x-mc-app-id": mimecast_api_key,
         "x-mc-date": date_str,
         "x-mc-req-id": request_id,
         "Content-Type": "application/json"
@@ -41,7 +38,7 @@ def generate_headers():
 
 # Function to fetch email statistics
 def get_email_statistics(start_date, end_date):
-    url = f"{BASE_URL}/message/traffic"
+    url = f"https://{BASE_URL}/api/message/traffic"
     headers = generate_headers()
     
     payload = {
