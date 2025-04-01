@@ -1,7 +1,7 @@
 from openpyxl import Workbook
 from merakidata import getMerakiData
 from freshservicedata import getFreshServiceData
-from Users import get_AAD_Users 
+from azuredata import get_AAD_Users 
 
 # Create an Excel workbook
 wb = Workbook()
