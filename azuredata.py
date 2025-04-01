@@ -10,7 +10,7 @@ TENANT_ID = os.getenv("TENANT_ID")
 CLIENT_ID = os.getenv("CLIENT_ID")
 CLIENT_SECRET = os.getenv("CLIENT_SECRET")
 
-#grabbing access token u
+#grabbing access token 
 def get_access_token():
     app = ConfidentialClientApplication(
         client_id=CLIENT_ID,
