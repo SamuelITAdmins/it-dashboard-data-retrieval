@@ -1,7 +1,7 @@
 from openpyxl import Workbook
 from merakidata import getMerakiData
 from freshservicedata import getFreshServiceData
-from azuredata import get_AAD_Users 
+from azuredata import getAADUsers
 
 # Create an Excel workbook
 wb = Workbook()
@@ -49,13 +49,12 @@ fs_ws["B2"] = fs_data['unresolved_tickets']
 fs_ws["C2"] = fs_data['resolved_tickets']
 fs_ws["D2"] = fs_data['resolution_percentage']
 
-
-# Get users
-company_name = "Samuel Engineering"
-users = get_AAD_Users(company_name)
+# Get Azure active directory data
+companyname = "Samuel Engineering"
+users = getAADUsers(companyname)
 
 # Create a new sheet for AAD user data
-aad_ws = wb.create_sheet(title="Users")
+aad_ws = wb.create_sheet(title= "AAD Users")
 
 # Header row
 aad_ws["A1"] = "User Principal Name"
@@ -71,7 +70,10 @@ for idx, user in enumerate(users, start=2):
     aad_ws[f"D{idx}"] = user.get("city", "")
 
 
+
 # Save the Excel file
 file_name = "IT Metric Dashboard Spreadsheet.xlsx"
 wb.save(file_name)
-print(f"Data saved to {file_name}")
+print(f" Azure AD user data for '{companyname}' added to sheet '{aad_ws}' in '{file_name}'")
+print(f"Data saved to {file_name}") 
+
