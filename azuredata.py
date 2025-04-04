@@ -45,8 +45,6 @@ def getAADUsers(companyname):
     # Filter users 
     filtered_users = [u for u in users if u.get("companyName") == companyname]
 
-    
-
     return filtered_users
 
 if __name__ == "__main__":
