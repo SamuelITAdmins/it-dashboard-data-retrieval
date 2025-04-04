@@ -11,7 +11,7 @@ CLIENTID = os.getenv("AZURE_CLIENTID")
 CLIENTSECRET = os.getenv("AZURE_CLIENTSECRET")
 
 #grabbing access token 
-def getaccesstoken():
+def getAccessToken():
     app = ConfidentialClientApplication(
         client_id=CLIENTID,
         authority=f"https://login.microsoftonline.com/{TENANTID}",
@@ -24,7 +24,7 @@ def getaccesstoken():
     return result.get("access_token")
 
 def getAADUsers(companyname):
-    token = getaccesstoken()
+    token = getAccessToken()
     if not token:
         raise Exception("Access token not available.")
 
