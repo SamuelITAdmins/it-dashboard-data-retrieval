@@ -19,7 +19,7 @@ def getaccesstoken():
     )
     result = app.acquire_token_for_client(scopes=["https://graph.microsoft.com/.default"])
 
-    print("Token result:", result)  # 🔍 Add this line
+    print("Token result:", result)  
 
     return result.get("access_token")
 
