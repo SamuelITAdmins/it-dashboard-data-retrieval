@@ -48,7 +48,7 @@ def getAADUsers(companyname):
     return filtered_users
 
 if __name__ == "__main__":
-    companyname = "Samuel Engineering"
+    companyname = "Samuel EPC"
     users = getAADUsers(companyname)
 
     # Exclude users without job titles

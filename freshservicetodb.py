@@ -46,7 +46,9 @@ def getFreshServiceTickets():
     page += 1
   
   # print(f'Tickets: {json.dumps(all_tickets, indent=2)}')
-  print(f'First ticket: {json.dumps(all_tickets[0:4], indent=2)}')
+  # print(f'First ticket: {json.dumps(all_tickets[0:4], indent=2)}')
+  for key in all_tickets[0].keys():
+    print(key)
   print(f'Count: {len(all_tickets)}')
 
   return all_tickets
@@ -72,7 +74,12 @@ def getFreshServiceUsers():
     all_users.extend(users)
     page += 1
 
-  print(f'First user: {json.dumps(all_users[0], indent=2)}')
+  for agent in all_users:
+    print(agent.get("first_name", []))
+    print(agent.get("last_name", []))
+    print("")
+  #print(f'Users: {json.dumps(all_users, indent=2)}')
+  #print(f'First user: {json.dumps(all_users[0], indent=2)}')
   print(f'Count: {len(all_users)}')
 
   return all_users
@@ -80,4 +87,4 @@ def getFreshServiceUsers():
 
 if __name__ == "__main__":
   getFreshServiceTickets()
-  getFreshServiceUsers()
+  #getFreshServiceUsers()
