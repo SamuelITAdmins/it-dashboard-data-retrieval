@@ -5,4 +5,4 @@ Nasuni - file shares
 FreshService - assets
 PatchmyPC.- 
 Nutanix - 
-Mimecast - 
+Mimecast - emails and spam
