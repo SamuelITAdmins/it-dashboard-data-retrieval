@@ -1,4 +1,5 @@
 import meraki
+import json
 from dotenv import load_dotenv
 import os
 import sys
@@ -117,6 +118,7 @@ def getMerakiData():
             # name='DEN-1ST-TEMP'
         )
         if not switches: raise Exception('No switches found')
+        print(f'Number of switches: {len(switches)}')
 
         access_points = dashboard.organizations.getOrganizationDevices(
             se_organization['id'],
@@ -124,6 +126,7 @@ def getMerakiData():
             # name='DEN-4TH-AP-04'
         )
         if not access_points: raise Exception('No access points found')
+        print(f'Number of access points: {len(access_points)}')
 
         # pair switches with switch downtimes
         switch_downtimes = []
@@ -146,9 +149,85 @@ def getMerakiData():
         print(f"An error occurred: {e}")
         raise
 
+def getDeviceUsage():
+    load_dotenv()
+    meraki_api_key = os.getenv("MERAKI_API_KEY")
+
+    # create the dashboard opbject for the meraki API
+    dashboard = meraki.DashboardAPI(
+        meraki_api_key,
+        output_log=False
+    )
+
+    try:
+        # get the organization
+        se_organization = dashboard.organizations.getOrganizations()[0]
+        if se_organization['name'] != 'Samuel Engineering': raise Exception('Did not get SE as the organization')
+
+        device_summary = dashboard.organizations.getOrganizationSummaryTopDevicesByUsage(se_organization['id'], quantity=100, timespan=7*24*60*60)
+        print(len(device_summary))
+        # print(json.dumps(device_summary, indent=2))
+
+        return device_summary
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        raise
+
+def getAlerts():
+    load_dotenv()
+    meraki_api_key = os.getenv("MERAKI_API_KEY")
+
+    # create the dashboard opbject for the meraki API
+    dashboard = meraki.DashboardAPI(
+        meraki_api_key,
+        output_log=False
+    )
+
+    try:
+        # get the organization
+        se_organization = dashboard.organizations.getOrganizations()[0]
+        if se_organization['name'] != 'Samuel Engineering': raise Exception('Did not get SE as the organization')
+
+        device_alerts = dashboard.organizations.getOrganizationWebhooksAlertTypes(se_organization['id'], productType='switch')
+        print(len(device_alerts))
+        print(json.dumps(device_alerts, indent=2))
+
+        return device_alerts
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        raise
+
+def getLosses():
+    load_dotenv()
+    meraki_api_key = os.getenv("MERAKI_API_KEY")
+
+    # create the dashboard opbject for the meraki API
+    dashboard = meraki.DashboardAPI(
+        meraki_api_key,
+        output_log=False
+    )
+
+    end_time = datetime.now(timezone.utc)
+    start_time = end_time - timedelta(days=60)
+
+    try:
+        # get the organization
+        se_organization = dashboard.organizations.getOrganizations()[0]
+        if se_organization['name'] != 'Samuel Engineering': raise Exception('Did not get SE as the organization')
+
+        latency_losses = dashboard.organizations.getOrganizationDevicesUplinksLossAndLatency(se_organization['id'], t0=start_time)
+        print(len(latency_losses))
+        print(json.dumps(latency_losses, indent=2))
+
+        return latency_losses
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        raise
+
 __all__ = ['getMerakiData']
 
 if __name__ == "__main__":
+    # getLosses()
     switch_data, ap_data = getMerakiData()
     print('Switch data:')
     for switch in switch_data:

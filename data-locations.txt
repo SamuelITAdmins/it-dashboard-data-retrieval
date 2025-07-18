@@ -1,8 +1,8 @@
 VMWare - servers
-Meraki - switches and AP tabs
+Meraki - switches and AP tabs, server room temperatures
 Microsoft Azure - SSO users
 Nasuni - file shares
-FreshService - assets
-PatchmyPC.- 
+FreshService - assets, tickets
+PatchmyPC - 
 Nutanix - 
 Mimecast - emails and spam
