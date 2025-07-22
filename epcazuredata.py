@@ -6,9 +6,9 @@ from msal import ConfidentialClientApplication
 # load .env
 load_dotenv()
 
-TENANTID = os.getenv ("SE_AZURE_TENANTID")
-CLIENTID = os.getenv("SE_AZURE_CLIENTID")
-CLIENTSECRET = os.getenv("SE_AZURE_CLIENTSECRET")
+TENANTID = os.getenv ("EPC_AZURE_TENANTID")
+CLIENTID = os.getenv("EPC_AZURE_CLIENTID")
+CLIENTSECRET = os.getenv("EPC_AZURE_CLIENTSECRET")
 
 #grabbing access token 
 def getAccessToken():
@@ -48,7 +48,7 @@ def getAADUsers(companyname):
     return filtered_users
 
 if __name__ == "__main__":
-    companyname = "Samuel Engineering"
+    companyname = "Samuel EPC"
     users = getAADUsers(companyname)
 
     # Exclude users without job titles
